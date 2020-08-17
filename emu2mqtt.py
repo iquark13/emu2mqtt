@@ -27,6 +27,10 @@ demandTopic = '/homeassistant/sensor/emu2/demand'
 usageTopic  = '/homeassistant/sensor/emu2/usage'
 
 
+#Create emu object:
+pwr = emu('/ttyACM0')
+
+
 #Connect to mqtt
 first_connection = False #used for looping until connected
 
@@ -106,7 +110,7 @@ def main():
     threads.append(t)
     t.start()
     
-    t=threading.Thread(target=doLoop,args=(mqttc,dataList,termSig))
+    t=threading.Thread(target=doLoop,args=(pwr,dataList,termSig))
     threads.append(t)
     t.start()
 
