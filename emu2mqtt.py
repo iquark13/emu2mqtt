@@ -95,23 +95,23 @@ def sendUsage():
 
 
 #Create the main thread for sending mqtt messages
-    def main():
-        threads =[]
-        mqttc.loop_start() #Start the loop until termSig kills us
-        t=threading.Thread(target=sendDemand)
-        threads.append(t)
-        t.start()
+def main():
+    threads =[]
+    mqttc.loop_start() #Start the loop until termSig kills us
+    t=threading.Thread(target=sendDemand)
+    threads.append(t)
+    t.start()
 
-        t=threading.Thread(target=sendUsage)
-        threads.append(t)
-        t.start()
-        
-        t=threading.Thread(target=doLoop,args=(mqttc,dataList,termSig))
-        threads.append(t)
-        t.start()
+    t=threading.Thread(target=sendUsage)
+    threads.append(t)
+    t.start()
+    
+    t=threading.Thread(target=doLoop,args=(mqttc,dataList,termSig))
+    threads.append(t)
+    t.start()
 
-        while termSig==False:
-            time.sleep(60)
+    while termSig==False:
+        time.sleep(60)
 
 if __name__ == "__main__":
     main()
