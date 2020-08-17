@@ -1,6 +1,8 @@
 import json 
 import paho.mqtt.client as mqtt
-import threading 
+import threading
+from emu2grab import *
+
 
 
 
@@ -81,7 +83,7 @@ def sendUsage():
     while termSig == False:
         if usageEvent.wait(timeout=13):
             jsonDict['usage']=dataList[0]
-            while mqttEvent.isSet()
+            while mqttEvent.isSet():
                 time.sleep(.1)
             try:
                 mqttEvent.set()
