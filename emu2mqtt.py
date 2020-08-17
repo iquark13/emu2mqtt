@@ -110,7 +110,8 @@ def main():
     threads.append(t)
     t.start()
     
-    t=threading.Thread(target=doLoop,args=(pwr,dataList,termSig))
+    t=threading.Thread(target=doLoop,
+                        args=(pwr,dataList,termSig,demandEvent,usageEvent))
     threads.append(t)
     t.start()
 
