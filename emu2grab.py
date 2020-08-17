@@ -1,8 +1,4 @@
 from emu import *
-
-import logging
-import sys
-import os 
 from datetime import datetime
 
 Y2K = 946684800
@@ -23,7 +19,9 @@ def get_reading(reading, obj):
 def get_price(obj):
     return int(obj.Price, 16) / float(10 ** int(obj.TrailingDigits, 16))
 
-def doLoop(client):
+def doLoop(inputTup):
+
+    client,outputList,sigTerm = inputTup
 
     client.start_serial()
     client.get_instantaneous_demand('Y')
@@ -32,25 +30,20 @@ def doLoop(client):
     last_demand = 0
     last_reading = 0
 
-    while True:
+    while sigTerm==False:
         time.sleep(10)
 
         try:
             instantaneous_demand = client.InstantaneousDemand 
             timestamp = get_timestamp(instantaneous_demand)
             if timestamp > last_demand:
-                measurement = [
-                    {
-                        "measurement": "demand",
-                        "time": timestamp,
-                        "fields": {
-                            "demand": get_reading(instantaneous_demand.Demand, instantaneous_demand)
-                        }
-                    }
-                ]
+                outputList[0]=get_reading(instantaneous_demand.Demand,
+                                            instantaneous_demand)
                 last_demand = timestamp
+                demandEvent.set()
                 #DEBUG
-                print(measurement)
+                print(outputList[0])
+
         except AttributeError:
             pass 
 
@@ -58,19 +51,12 @@ def doLoop(client):
             current_summation_delivered = client.CurrentSummationDelivered
             timestamp = get_timestamp(current_summation_delivered)
             if timestamp > last_reading:
-                measurement = [
-                    {
-                        "measurement": "reading",
-                        "time": timestamp,
-                        "fields": {
-                            "reading": get_reading(current_summation_delivered.SummationDelivered,
-                                                   current_summation_delivered)
-                        }
-                    }
-                ]
+                outputList[1]=get_reading(current_summation_delivered.SummationDelivered,
+                                            current_summation_delivered)
                 last_reading = timestamp
+                usageEvent.set()
                 #DEBUG
-                print(measurement)
+                print(outputList[1])
         except AttributeError:
             pass
 
