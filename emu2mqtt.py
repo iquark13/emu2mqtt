@@ -106,7 +106,7 @@ def main():
     threads.append(t)
     t.start()
     
-    t=threading.Thread(target=doLoop,args=(mqttc,dataList,termSig))
+    t=threading.Thread(target=doLoop,args=((mqttc,dataList,termSig)))
     threads.append(t)
     t.start()
 
