@@ -19,9 +19,8 @@ def get_reading(reading, obj):
 def get_price(obj):
     return int(obj.Price, 16) / float(10 ** int(obj.TrailingDigits, 16))
 
-def doLoop(inputTup):
+def doLoop(client,outputList,sigTerm):
 
-    client,outputList,sigTerm = inputTup
 
     client.start_serial()
     client.get_instantaneous_demand('Y')
