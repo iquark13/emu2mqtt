@@ -63,7 +63,7 @@ def sendDemand():
     while termSig == False:
         if demandEvent.wait(timeout=11):
             jsonDict['demand']=dataList[0]
-            while mqttEvent.isSet()
+            while mqttEvent.isSet():
                 time.sleep(.1)
             try:
                 mqttEvent.set()
