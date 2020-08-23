@@ -21,8 +21,12 @@ def get_price(obj):
 
 def doLoop(client,outputList,sigTerm,demandEvent,usageEvent):
 
-
-    client.start_serial()
+    try:
+        client.start_serial()
+    except:
+        print('Trouble starting serial. Sending sigterm')
+        sigTerm=True
+        break
     client.get_instantaneous_demand('Y')
     client.get_current_summation_delivered()
 
