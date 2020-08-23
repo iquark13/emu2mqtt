@@ -1,5 +1,6 @@
 from emu import *
 from datetime import datetime
+import sys
 
 Y2K = 946684800
 int_max = 2**31-1
@@ -19,11 +20,15 @@ def get_reading(reading, obj):
 def get_price(obj):
     return int(obj.Price, 16) / float(10 ** int(obj.TrailingDigits, 16))
 
-def doLoop(inputTup):
+def doLoop(client,outputList,sigTerm,demandEvent,usageEvent):
 
-    client,outputList,sigTerm = inputTup
 
-    client.start_serial()
+    try:
+        client.start_serial()
+    except:
+        print('Trouble starting serial. Sending sigterm')
+        sigTerm=True
+        sys.exit(1)
     client.get_instantaneous_demand('Y')
     client.get_current_summation_delivered()
 
