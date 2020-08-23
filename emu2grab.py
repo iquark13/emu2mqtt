@@ -21,45 +21,46 @@ def get_price(obj):
 
 def doLoop(client,outputList,sigTerm,demandEvent,usageEvent):
 
-    try:
-        client.start_serial()
-    except:
-        print('Trouble starting serial. Sending sigterm')
-        sigTerm=True
-        break
-    client.get_instantaneous_demand('Y')
-    client.get_current_summation_delivered()
-
-    last_demand = 0
-    last_reading = 0
-
-    while sigTerm==False:
-        time.sleep(10)
-
+    if 1==1:
         try:
-            instantaneous_demand = client.InstantaneousDemand 
-            timestamp = get_timestamp(instantaneous_demand)
-            if timestamp > last_demand:
-                outputList[0]=get_reading(instantaneous_demand.Demand,
-                                            instantaneous_demand)
-                last_demand = timestamp
-                demandEvent.set()
-                #DEBUG
-                print(outputList[0])
+            client.start_serial()
+        except:
+            print('Trouble starting serial. Sending sigterm')
+            sigTerm=True
+            break
+        client.get_instantaneous_demand('Y')
+        client.get_current_summation_delivered()
 
-        except AttributeError:
-            pass 
+        last_demand = 0
+        last_reading = 0
 
-        try:
-            current_summation_delivered = client.CurrentSummationDelivered
-            timestamp = get_timestamp(current_summation_delivered)
-            if timestamp > last_reading:
-                outputList[1]=get_reading(current_summation_delivered.SummationDelivered,
-                                            current_summation_delivered)
-                last_reading = timestamp
-                usageEvent.set()
-                #DEBUG
-                print(outputList[1])
-        except AttributeError:
-            pass
+        while sigTerm==False:
+            time.sleep(10)
+
+            try:
+                instantaneous_demand = client.InstantaneousDemand 
+                timestamp = get_timestamp(instantaneous_demand)
+                if timestamp > last_demand:
+                    outputList[0]=get_reading(instantaneous_demand.Demand,
+                                                instantaneous_demand)
+                    last_demand = timestamp
+                    demandEvent.set()
+                    #DEBUG
+                    print(outputList[0])
+
+            except AttributeError:
+                pass 
+
+            try:
+                current_summation_delivered = client.CurrentSummationDelivered
+                timestamp = get_timestamp(current_summation_delivered)
+                if timestamp > last_reading:
+                    outputList[1]=get_reading(current_summation_delivered.SummationDelivered,
+                                                current_summation_delivered)
+                    last_reading = timestamp
+                    usageEvent.set()
+                    #DEBUG
+                    print(outputList[1])
+            except AttributeError:
+                pass
 
